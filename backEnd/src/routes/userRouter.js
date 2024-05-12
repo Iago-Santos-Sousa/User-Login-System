@@ -9,6 +9,7 @@ router.post("/login", async (req, res) => {
   try {
     const { cpf, password } = req.body;
     const result = await AuthService.login(cpf, password);
+    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     console.error("Erro ao realizar login: ", error);
@@ -17,6 +18,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/dashboard", async (req, res) => {
+  // Recupera o objeto user criado no middleware de autenticação com as credenciais do usuário e o token
   const { user } = req;
 
   if (user) {

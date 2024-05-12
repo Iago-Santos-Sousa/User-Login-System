@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-const routes = require("./routes/userRouter");
+const userRouter = require("./routes/userRouter");
 const homeRouter = require("./routes/homeRouter");
 
 const corsOptions = {
@@ -14,7 +14,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/", homeRouter);
-app.use("/api/users", routes);
+app.use("/api/users", userRouter);
 
 app.listen(process.env.PORT || 3001, () => {
   console.log("Server up and running on PORT: ", process.env.PORT);
