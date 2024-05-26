@@ -8,11 +8,23 @@ const insertUser = async (name, email, cpf, password) => {
     const query = `INSERT INTO users.user (name, email, cpf, password) VALUES (?, ?, ?, ?)`;
 
     const params = [name, email, cpf, hashPassword];
-    const result = await dbUser.query(query, params);
+    const [result] = await dbUser.query(query, params);
 
     return result;
   } catch (error) {
     console.log(error);
+  }
+};
+
+const findUser = async (email) => {
+  try {
+    const paras = [email];
+    const query = `SELECT * FROM users.user WHERE user.email = ?`;
+    const [result] = await dbUser.query(query, paras);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 };
 
@@ -27,6 +39,7 @@ const findUsers = async () => {
 };
 
 const getUserByCpfAndPassword = async (cpf, password) => {
+  // cpf = cpf.replace(/[.-]/g, "");
   const query = `SELECT * FROM users.user WHERE cpf = ?`;
   const params = [cpf];
   const [results] = await dbUser.query(query, params);
@@ -49,4 +62,5 @@ module.exports = {
   findUsers,
   insertUser,
   getUserByCpfAndPassword,
+  findUser,
 };

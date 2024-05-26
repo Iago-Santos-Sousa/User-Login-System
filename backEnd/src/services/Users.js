@@ -19,13 +19,14 @@ const login = async (cpf, password) => {
         nome: user[0].name,
         email: user[0].email,
         cpf: user[0].cpf,
+        userId: user[0].user_id,
       };
 
       // Gera o token com o as credenciais do usuário como payload
       const token = generateToken(result);
       console.log(token);
 
-      // Retorna as credenciais e o token formado
+      // Retorna as credenciais do usuário e o token formado
       return { user: result, token: token };
     } else {
       throw new Error("Credenciais inválidas!");
@@ -35,12 +36,37 @@ const login = async (cpf, password) => {
   }
 };
 
-const createUser = async (req, res) => {
-  const { name, email, cpf, password } = req.body;
+const generateLogin = async (req, res) => {
   try {
-    const result = await UserModel.insertUser(name, email, cpf, password);
+    const { cpf, password } = req.body;
+    const result = await login(cpf, password);
     console.log(result);
-    res.status(200).json({ message: "Usuário criado" });
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Erro ao realizar login: ", error);
+    res.status(401).json({ error: "Credenciais inválidas" });
+  }
+};
+
+const createUser = async (req, res) => {
+  try {
+    const { userName, email, cpf, password } = req.body;
+
+    if (!userName || !email || !cpf || !password) {
+      return res.status(400).json({ message: "Dados faltando!" });
+    }
+
+    const existUser = await UserModel.findUser(email);
+
+    if (existUser && existUser.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Já existe um usuário com esse email!" });
+    }
+
+    const result = await UserModel.insertUser(userName, email, cpf, password);
+    console.log(result);
+    res.status(200).json({ message: "Usuário criado!" });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -61,8 +87,11 @@ const getUsers = async (req, res) => {
   }
 };
 
+const uploadImgUser = async (img) => {};
+
 module.exports = {
-  login,
   getUsers,
   createUser,
+  generateLogin,
+  uploadImgUser,
 };
