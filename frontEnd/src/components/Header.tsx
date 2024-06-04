@@ -1,8 +1,12 @@
 import React from "react";
-
+import { useLogin } from "../context/AppProvider";
 import userLogo from "../assets/user-check-icon.svg";
+import { useNavigate, NavigateFunction, Link } from "react-router-dom";
 
 const Header = () => {
+  const signOut = useLogin()!.signOut;
+  const navigate: NavigateFunction = useNavigate();
+
   return (
     <div className="w-full bg-prymaryBlue py-4 flex justify-between items-center px-8">
       <div className="logo-img w-[80px] h-[80px]">
@@ -18,7 +22,13 @@ const Header = () => {
             <li className="">
               <a href="">Details</a>
             </li>
-            <li className="">
+            <li
+              className=""
+              onClick={() => {
+                signOut();
+                navigate("/", { replace: true });
+              }}
+            >
               <a href="">Log out</a>
             </li>
           </ul>

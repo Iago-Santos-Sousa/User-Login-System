@@ -6,7 +6,7 @@ import axios, {
 
 // Crie uma instância do Axios com a URL base
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/users",
+  baseURL: "http://localhost:3000",
 });
 
 // Adicione um interceptor de requisição

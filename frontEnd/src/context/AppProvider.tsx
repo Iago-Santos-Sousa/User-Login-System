@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  PropsWithChildren,
+} from "react";
 import React from "react";
 
 interface UserInfos {
@@ -8,7 +14,8 @@ interface UserInfos {
 }
 
 interface authContextValueType {
-  token?: string;
+  token: string | null;
+  isLoadingToken: boolean;
   user: UserInfos | null;
   signIn: (user: UserInfos, newToken: string) => Promise<void>;
   signOut: () => void;
@@ -16,15 +23,14 @@ interface authContextValueType {
   userImg: string | null;
 }
 
-interface PropsContext {
-  children: React.ReactNode;
-}
+type AuthProviderProps = PropsWithChildren;
 
 // Crie o contexto de autenticação
 const AppContext = createContext<authContextValueType | null>(null);
 
-export const AppProvider = ({ children }: PropsContext): React.ReactNode => {
-  const [token, setToken] = useState<string>("");
+export const AppProvider = ({ children }: AuthProviderProps) => {
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoadingToken, setIsLoadingToken] = useState<boolean>(true);
   const [user, setUser] = useState<UserInfos | null>(null);
   const [userImg, setUserImg] = useState<string | null>(null);
 
@@ -33,6 +39,7 @@ export const AppProvider = ({ children }: PropsContext): React.ReactNode => {
   };
 
   const validateSession = async (): Promise<void> => {
+    // debugger;
     console.log("validateSession rodou");
     const sessionToken = sessionStorage.getItem("user.token");
     const sessionUser = sessionStorage.getItem("user.user");
@@ -41,6 +48,7 @@ export const AppProvider = ({ children }: PropsContext): React.ReactNode => {
       const sessionUserParsed: UserInfos = JSON.parse(sessionUser);
       setToken(sessionToken);
       setUser(sessionUserParsed);
+      setIsLoadingToken(false);
     }
   };
 
@@ -60,12 +68,13 @@ export const AppProvider = ({ children }: PropsContext): React.ReactNode => {
 
   useEffect(() => {
     (async () => {
-      validateSession();
+      await validateSession();
     })();
   }, []);
 
   const authContextValue: authContextValueType = {
     token,
+    isLoadingToken,
     user,
     signIn,
     signOut,
@@ -86,10 +95,19 @@ export const useLogin = (): authContextValueType | null => {
   const appContext = useContext(AppContext);
   if (!appContext) return null;
 
-  const { token, user, signIn, signOut, handleImgUser, userImg } = appContext;
+  const {
+    token,
+    user,
+    signIn,
+    signOut,
+    handleImgUser,
+    userImg,
+    isLoadingToken,
+  } = appContext;
 
   return {
     token,
+    isLoadingToken,
     user,
     signIn,
     signOut,

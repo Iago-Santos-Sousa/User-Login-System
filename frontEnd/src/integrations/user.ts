@@ -13,7 +13,7 @@ export const user = () => ({
     try {
       const { userName, email, password } = userInfo;
 
-      const response: AxiosResponse = await api.post("/create-user", {
+      const response: AxiosResponse = await api.post("/api/users/create-user", {
         userName,
         email,
         password,

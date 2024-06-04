@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import userImg from "../assets/example-user.jpeg";
-import PhotoUpload from "./PhotoUpload";
+import PhotoUpload from "../../components/PhotoUpload";
+import { useLogin } from "../../context/AppProvider";
 
 const ProfileCard = () => {
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
   const [image64, setImage64] = useState<string | null>(null);
+  const user = useLogin()?.user;
 
   //função para converter a imagem em base64
   const blobToBase64 = (blob: Blob): Promise<string | null> => {
@@ -57,8 +59,8 @@ const ProfileCard = () => {
     setImageBlob(null);
   };
 
-  console.log(imageBlob);
-  console.log(image64);
+  // console.log(imageBlob);
+  // console.log(image64);
 
   return (
     <div className="relative flex flex-col justify-center items-center max-w-[min(80%,450px)] mt-6 mx-auto border-2 border-x-gray-100 rounded-md pb-6">
@@ -76,7 +78,7 @@ const ProfileCard = () => {
       </div>
 
       <h3 className="w-full user-name text-center mt-20 text-lg font-bold">
-        Iago Dos Santos Sousa
+        {user?.nome}
       </h3>
 
       <div className="w-full text-center mt-6">

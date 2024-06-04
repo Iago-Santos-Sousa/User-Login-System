@@ -28,7 +28,7 @@ const LoginPage = () => {
   const handleSignIn: SubmitHandler<Inputs> = async (data): Promise<void> => {
     const auth = await loginAPi().login(data);
 
-    if (auth?.user) {
+    if (auth?.token && auth?.user) {
       await signIn!(auth.user, auth.token);
       navigate("panel");
     } else {

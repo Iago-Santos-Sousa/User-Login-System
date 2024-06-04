@@ -20,7 +20,7 @@ export const loginAPi = () => ({
     password,
   }: UserInfos): Promise<UserResponse | undefined> => {
     try {
-      const response = await api.post<UserResponse>("/login", {
+      const response = await api.post<UserResponse>("/api/users/login", {
         email,
         password,
       });
