@@ -5,19 +5,17 @@ import { AxiosResponse } from "axios";
 type UserInfo = {
   userName: string;
   email: string;
-  cpf: string;
   password: string;
 };
 
 export const user = () => ({
   createUser: async (userInfo: UserInfo): Promise<number | null> => {
     try {
-      const { userName, email, cpf, password } = userInfo;
+      const { userName, email, password } = userInfo;
 
       const response: AxiosResponse = await api.post("/create-user", {
         userName,
         email,
-        cpf,
         password,
       });
 

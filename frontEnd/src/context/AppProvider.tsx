@@ -2,19 +2,19 @@ import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
 
 interface UserInfos {
-  cpf: string;
   email: string;
   nome: string;
+  userId: number;
 }
 
-type authContextValueType = {
-  token: string;
+interface authContextValueType {
+  token?: string;
   user: UserInfos | null;
-  signIn: (newToken: string, user: UserInfos) => Promise<void>;
+  signIn: (user: UserInfos, newToken: string) => Promise<void>;
   signOut: () => void;
   handleImgUser: (img: string) => void;
   userImg: string | null;
-};
+}
 
 interface PropsContext {
   children: React.ReactNode;
@@ -44,7 +44,7 @@ export const AppProvider = ({ children }: PropsContext): React.ReactNode => {
     }
   };
 
-  const signIn = async (newToken: string, user: UserInfos): Promise<void> => {
+  const signIn = async (user: UserInfos, newToken: string): Promise<void> => {
     console.log("sigIn rodou");
     setToken(newToken);
     setUser(user);

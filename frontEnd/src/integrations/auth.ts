@@ -1,27 +1,27 @@
 import api from "./api";
 
 type UserInfos = {
-  cpf: string;
+  email: string;
   password: string;
 };
 
-type UserResponse = {
-  token: string;
+interface UserResponse {
+  token?: string;
   user: {
-    cpf: string;
     email: string;
     nome: string;
+    userId: number;
   };
-};
+}
 
 export const loginAPi = () => ({
   login: async ({
-    cpf,
+    email,
     password,
   }: UserInfos): Promise<UserResponse | undefined> => {
     try {
       const response = await api.post<UserResponse>("/login", {
-        cpf,
+        email,
         password,
       });
 

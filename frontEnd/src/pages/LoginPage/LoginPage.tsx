@@ -8,7 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Mask from "../../utils/Mask";
 
 type Inputs = {
-  cpf: string;
+  email: string;
   password: string;
 };
 
@@ -28,11 +28,11 @@ const LoginPage = () => {
   const handleSignIn: SubmitHandler<Inputs> = async (data): Promise<void> => {
     const auth = await loginAPi().login(data);
 
-    if (auth?.token && auth?.user) {
-      await signIn!(auth.token, auth.user);
+    if (auth?.user) {
+      await signIn!(auth.user, auth.token);
       navigate("panel");
     } else {
-      setError("cpf", { type: "focus" }, { shouldFocus: true });
+      setError("email", { type: "focus" }, { shouldFocus: true });
       setError("password", { type: "focus" }, { shouldFocus: true });
     }
   };
@@ -47,22 +47,22 @@ const LoginPage = () => {
           <h1 className="text-center text-4xl font-bold">Login</h1>
 
           <div className="w-full">
-            <label htmlFor="cpf" className="text-sm text-spanTwoColor w-full">
-              CPF
+            <label htmlFor="email" className="text-sm text-spanTwoColor w-full">
+              Email
             </label>
             <div className="relative w-full">
               <input
                 type="text"
-                placeholder="cpf"
-                id="cpf"
+                placeholder="email"
+                id="email"
                 className="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-prymaryPurple"
-                {...register("cpf", {
+                {...register("email", {
                   required: true,
-                  onChange: (e) => {
-                    e.target.value = Mask.CPF(e.target.value);
-                  },
+                  // onChange: (e) => {
+                  //   e.target.value = Mask.CPF(e.target.value);
+                  // },
                 })}
-                aria-required={errors.cpf ? true : false}
+                aria-required={errors.email ? true : false}
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <img src={userIcon} alt="" width={20} height={20} />
