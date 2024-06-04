@@ -2,12 +2,12 @@ const { dbUser } = require("../db/dataBase");
 const bcrypt = require("bcrypt");
 const salt = bcrypt.genSaltSync(10);
 
-const insertUser = async (name, email, cpf, password) => {
+const insertUser = async (name, email, password) => {
   try {
     const hashPassword = bcrypt.hashSync(password, salt);
-    const query = `INSERT INTO users.user (name, email, cpf, password) VALUES (?, ?, ?, ?)`;
+    const query = `INSERT INTO users.user (name, email, password) VALUES (?, ?, ?)`;
 
-    const params = [name, email, cpf, hashPassword];
+    const params = [name, email, hashPassword];
     const [result] = await dbUser.query(query, params);
 
     return result;
@@ -38,10 +38,10 @@ const findUsers = async () => {
   }
 };
 
-const getUserByCpfAndPassword = async (cpf, password) => {
+const getUserEmailAndPassword = async (email, password) => {
   // cpf = cpf.replace(/[.-]/g, "");
-  const query = `SELECT * FROM users.user WHERE cpf = ?`;
-  const params = [cpf];
+  const query = `SELECT * FROM users.user WHERE email = ?`;
+  const params = [email];
   const [results] = await dbUser.query(query, params);
 
   if (!results || !results[0]) {
@@ -61,6 +61,6 @@ const getUserByCpfAndPassword = async (cpf, password) => {
 module.exports = {
   findUsers,
   insertUser,
-  getUserByCpfAndPassword,
+  getUserEmailAndPassword,
   findUser,
 };

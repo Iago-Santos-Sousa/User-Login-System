@@ -6,19 +6,18 @@ const generateToken = (payload) => {
   return token;
 };
 
-const login = async (cpf, password) => {
-  if (!cpf || !password) {
+const login = async (email, password) => {
+  if (!email || !password) {
     throw new Error("Parâmetros inválidos!");
   }
 
   try {
-    const user = await UserModel.getUserByCpfAndPassword(cpf, password);
+    const user = await UserModel.getUserEmailAndPassword(email, password);
 
     if (user && user.length > 0) {
       const result = {
         nome: user[0].name,
         email: user[0].email,
-        cpf: user[0].cpf,
         userId: user[0].user_id,
       };
 
@@ -38,8 +37,8 @@ const login = async (cpf, password) => {
 
 const generateLogin = async (req, res) => {
   try {
-    const { cpf, password } = req.body;
-    const result = await login(cpf, password);
+    const { email, password } = req.body;
+    const result = await login(email, password);
     console.log(result);
     res.status(200).json(result);
   } catch (error) {
@@ -50,9 +49,9 @@ const generateLogin = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { userName, email, cpf, password } = req.body;
+    const { userName, email, password } = req.body;
 
-    if (!userName || !email || !cpf || !password) {
+    if (!userName || !email || !email || !password) {
       return res.status(400).json({ message: "Dados faltando!" });
     }
 
@@ -64,7 +63,7 @@ const createUser = async (req, res) => {
         .json({ message: "Já existe um usuário com esse email!" });
     }
 
-    const result = await UserModel.insertUser(userName, email, cpf, password);
+    const result = await UserModel.insertUser(userName, email, password);
     console.log(result);
     res.status(200).json({ message: "Usuário criado!" });
   } catch (error) {
